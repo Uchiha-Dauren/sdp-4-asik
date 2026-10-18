@@ -18,3 +18,12 @@ reservation and notifies the customer. If any step fails, the completed steps ar
 * The facade receives the services through its constructor, so advanced clients share the same instances.
 * Clients only need to catch one exception type: `OrderProcessingException`.
 # sdp-4-asik
+
+## Rollback flow
+
+1. reserve stock -> undo: release stock
+2. charge payment -> undo: refund
+3. schedule shipping -> undo: cancel shipment
+4. commit stock, create order, notify customer
+
+If a step throws, the undo actions run in reverse order and the client gets `OrderProcessingException`.
